@@ -3,7 +3,7 @@ import datetime
 from pathlib import Path
 
 # Create a directory for test results if it doesn't exist
-results_dir = Path("test_results")
+results_dir = Path("tests/test_results")
 results_dir.mkdir(exist_ok=True)
 
 

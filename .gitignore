@@ -1,12 +1,29 @@
-__pycache__
-*.pyc
-*.pyo
-*.pyd
-*.pyw
-*.pyz
+# Python cache files
+__pycache__/
+*.py[cod]
 
-.cache
-.cursor
-
+# Virtual environment
 .venv
-.pytest_cache
+.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Pytest cache
+.pytest_cache/
+
+# Tests
+tests/
+
+# Cursor
+.cursor/
+
+# Cache
+.cache/
