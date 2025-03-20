@@ -46,8 +46,6 @@ logger = setup_logging(default_config)
 T = TypeVar('T')
 F = TypeVar('F', bound=Callable[..., Any])
 
-# Circuit breaker implementation - REMOVED and imported from core module
-
 class CacheManager:
     """Manages caching operations with support for multiple backends.
     

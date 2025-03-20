@@ -2,16 +2,7 @@
 
 import os
 import logging
-from typing import Dict, Any, TYPE_CHECKING, Optional, Union, Type
-
-if TYPE_CHECKING:
-    from ..cache_layers import MemoryLayer, RedisLayer, DiskLayer
-    from ..core.telemetry import TelemetryManager
-    from ..core.adaptive_ttl import AdaptiveTTLManager
-    from ..core.cache_warmup import CacheWarmup
-    from ..core.security import CacheEncryptor, DataSigner, AccessControl
-    from ..core.invalidation import InvalidationManager
-    from ..core.sharding import ShardManager, HashRingShardingStrategy, ModuloShardingStrategy
+from typing import Dict, Any
 
 from ..cache_config import CacheConfig, CacheLayerType
 
@@ -107,11 +98,11 @@ class CacheInitializer:
                     primary_layer = cache_layers[CacheLayerType.REDIS]
                     primary_layer_type = CacheLayerType.REDIS
             except Exception as e:
-                self.logger.error(f"Failed to initialize Redis layer: {e}")
+                logger.error(f"Failed to initialize Redis layer: {e}")
                 
         # If no layers were enabled, add memory layer as fallback
         if not cache_layers:
-            self.logger.warning("No cache layers were enabled; adding memory layer as fallback")
+            logger.warning("No cache layers were enabled; adding memory layer as fallback")
             cache_layers[CacheLayerType.MEMORY] = MemoryLayer(
                 namespace=self.config.namespace,
                 ttl=self.config.memory_cache_ttl
@@ -129,7 +120,7 @@ class CacheInitializer:
                 primary_layer_type = layer_order[0]
                 primary_layer = cache_layers[primary_layer_type]
         
-        self.logger.debug(
+        logger.debug(
             f"Cache layers initialized: "
             f"memory={CacheLayerType.MEMORY in cache_layers}, "
             f"redis={CacheLayerType.REDIS in cache_layers}, "

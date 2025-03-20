@@ -19,7 +19,7 @@ A flexible and extensible caching solution for Python applications supporting mu
 ## Installation
 
 ```bash
-pip install cachemanager
+pip install git+https://github.com/saviornt/cachemanager
 ```
 
 ## Quick Start
@@ -61,7 +61,7 @@ result2 = expensive_operation('param1')  # Returns cached result
 
 For full documentation, see the [CacheManager Documentation](docs/build/html/index.html).
 
-### Key Topics:
+### Key Topics
 
 - [Installation Guide](docs/build/html/installation.html)
 - [Quick Start](docs/build/html/quickstart.html)

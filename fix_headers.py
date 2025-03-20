@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Script to fix header underline lengths in RST files."""
 
-import os
 import re
 import glob
+
 
 def fix_header_underlines(file_path):
     """
@@ -42,13 +42,8 @@ def fix_header_underlines(file_path):
 
 def main():
     """Fix header underlines in all RST files in the docs directory"""
-    # Get the docs directory path (parent of scripts directory)
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    docs_dir = os.path.dirname(script_dir)
-    source_dir = os.path.join(docs_dir, 'source')
-    
     # Find all RST files recursively
-    rst_files = glob.glob(os.path.join(source_dir, "**/*.rst"), recursive=True)
+    rst_files = glob.glob("docs/source/**/*.rst", recursive=True)
     
     changes_made = 0
     for file_path in rst_files:

@@ -2,7 +2,6 @@
 """Script to create placeholder documentation files for missing advanced features."""
 
 import os
-import sys
 
 # Define the advanced features to create placeholders for
 ADVANCED_FEATURES = [
