@@ -57,19 +57,6 @@ result1 = expensive_operation('param1')
 result2 = expensive_operation('param1')  # Returns cached result
 ```
 
-## Documentation
-
-For full documentation, see the [CacheManager Documentation](docs/build/html/index.html).
-
-### Key Topics
-
-- [Installation Guide](docs/build/html/installation.html)
-- [Quick Start](docs/build/html/quickstart.html)
-- [Configuration Options](docs/build/html/configuration.html)
-- [API Reference](docs/build/html/api/index.html)
-- [Advanced Features](docs/build/html/advanced/index.html)
-- [Examples](docs/build/html/examples.html)
-
 ## Advanced Usage
 
 ### Hybrid Caching
