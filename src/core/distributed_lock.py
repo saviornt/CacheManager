@@ -9,7 +9,7 @@ import logging
 import time
 import uuid
 import random
-from typing import Optional, Callable, Any, Awaitable
+from typing import Optional, Callable, Any
 from functools import wraps
 
 import redis.asyncio as redis
@@ -178,35 +178,40 @@ class DistributedLock:
         return False
     
     async def __aenter__(self) -> "DistributedLock":
-        """Enter async context manager."""
+        """Enter the async context manager and acquire the lock.
+        
+        Returns:
+            DistributedLock: self for context manager
+            
+        Raises:
+            CacheError: If lock cannot be acquired
+        """
         return self
     
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
-        """Exit async context manager, no lock release by default.
-        
-        Note: This doesn't automatically release locks since the resource
-        name would be unknown. Use the context decorator instead for
-        automatic release.
-        """
+    async def __aexit__(self, exc_type: Optional[type], exc_val: Optional[Exception], exc_tb: Optional[Any]) -> None:
+        """Exit the async context manager and release the lock."""
         pass
 
-def distributed_lock(resource_name_func: Optional[Callable] = None):
-    """Decorator to apply distributed locking to a method.
-    
-    This decorator automatically acquires a lock before executing the method
-    and releases it afterwards, even if the method raises an exception.
+def distributed_lock(resource_name_func: Optional[Callable] = None) -> Callable:
+    """Decorator for using distributed locks on cache operations.
     
     Args:
-        resource_name_func: Function that returns the resource name to lock,
-            takes the same arguments as the decorated method.
-            If None, uses the first argument as the resource name.
-    
+        resource_name_func: Optional function to determine the resource name from args
+        
     Returns:
-        Decorator function
+        Callable: Decorator function
     """
-    def decorator(func):
+    def decorator(func: Callable) -> Callable:
+        """Decorator function that wraps a method with distributed lock functionality.
+        
+        Args:
+            func: The function to wrap
+            
+        Returns:
+            Callable: Wrapped function
+        """
         @wraps(func)
-        async def wrapper(self, *args, **kwargs):
+        async def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
             # Skip if no Redis client is available
             if not hasattr(self, '_redis') or self._redis is None:
                 return await func(self, *args, **kwargs)

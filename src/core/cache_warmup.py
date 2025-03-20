@@ -9,7 +9,7 @@ import json
 import logging
 import asyncio
 import time
-from typing import Dict, List, Optional, Any, Set, Callable, Union, Tuple
+from typing import Dict, List, Optional, Any, Callable
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -49,125 +49,81 @@ class CacheWarmup:
             'skipped': 0
         }
     
-    async def warmup(
-        self,
-        cache_obj: Any,
-        keys: Optional[List[str]] = None,
-        patterns: Optional[List[str]] = None,
-        max_concurrent: int = 10,
-        timeout: int = 300
-    ) -> Dict[str, Any]:
-        """Perform cache warmup by pre-populating keys.
+    async def warmup(self, cache_manager: Any) -> Dict[str, Any]:
+        """Warm up the cache by pre-loading keys.
         
         Args:
-            cache_obj: The cache manager instance to populate
-            keys: Optional list of specific keys to warm up
-            patterns: Optional list of key patterns to warm up
-            max_concurrent: Maximum number of concurrent warmup operations
-            timeout: Maximum time in seconds for the warmup process
+            cache_manager: The CacheManager instance to use for warming up
             
         Returns:
-            Dict with statistics about the warmup process
+            Dict: Statistics about the warmup process
         """
         if not self.enabled:
-            logger.info("Cache warmup is disabled")
-            return self._warmup_stats
+            return {"success": False, "reason": "Cache warmup is disabled"}
             
-        if self._is_warming_up:
-            logger.warning("Cache warmup already in progress, skipping")
-            return self._warmup_stats
+        if not self.warmup_keys_file:
+            return {"success": False, "reason": "No warmup keys file specified"}
             
-        self._is_warming_up = True
+        logger.info(f"Starting cache warmup with {len(self._value_providers)} keys")
+        
+        stats = {
+            "total_keys": 0,
+            "loaded_keys": 0,
+            "errors": 0,
+            "skipped": 0,
+            "time_taken": 0
+        }
+        
         start_time = time.time()
         
         try:
-            # Track statistics
-            stats = {
-                'start_time': datetime.now().isoformat(),
-                'keys_processed': 0,
-                'keys_loaded': 0,
-                'errors': 0,
-                'skipped': 0
-            }
+            # Load keys from file
+            with open(self.warmup_keys_file, 'r') as f:
+                warmup_data = json.load(f)
+                
+            # Get list of keys to warm up
+            if "keys" in warmup_data:
+                keys = warmup_data["keys"]
+                stats["total_keys"] = len(keys)
+                
+                # Process each key
+                for key in keys:
+                    try:
+                        # Check if we have a value provider for this key
+                        if key in self._value_providers:
+                            # Get value from provider
+                            provider = self._value_providers[key]
+                            if callable(provider):
+                                value = provider()
+                                # Set in cache
+                                await cache_manager.set(key, value)
+                                stats["loaded_keys"] += 1
+                            else:
+                                # Static value
+                                await cache_manager.set(key, provider)
+                                stats["loaded_keys"] += 1
+                        else:
+                            # No value provider, can't warm up this key
+                            stats["skipped"] += 1
+                    except Exception as e:
+                        logger.error(f"Error warming up key {key}: {e}")
+                        stats["errors"] += 1
             
-            # Collect keys from all sources
-            all_keys = set()
-            
-            # 1. From explicit keys parameter
-            if keys:
-                all_keys.update(keys)
-            
-            # 2. From key providers
-            for provider in self._key_providers:
-                try:
-                    provider_keys = provider()
-                    all_keys.update(provider_keys)
-                    logger.debug(f"Added {len(provider_keys)} keys from provider {provider.__name__}")
-                except Exception as e:
-                    logger.error(f"Error getting keys from provider {provider.__name__}: {e}")
-                    stats['errors'] += 1
-            
-            # 3. From warmup keys file
-            if self.warmup_keys_file and os.path.exists(self.warmup_keys_file):
-                try:
-                    warmup_keys = self.load_warmup_keys()
-                    for item in warmup_keys:
-                        all_keys.add(item['key'])
-                    logger.debug(f"Added {len(all_keys)} keys from warmup file")
-                except Exception as e:
-                    logger.error(f"Error loading warmup keys file {self.warmup_keys_file}: {e}")
-                    stats['errors'] += 1
-            
-            logger.info(f"Starting cache warmup with {len(all_keys)} keys")
-            
-            # Create semaphore for concurrency control
-            semaphore = asyncio.Semaphore(max_concurrent)
-            
-            # Create tasks for warmup
-            tasks = []
-            for key in all_keys:
-                task = self._warmup_key(cache_obj, key, semaphore)
-                tasks.append(task)
-            
-            # Wait for all tasks with timeout
-            results = await asyncio.gather(*tasks, return_exceptions=True)
-            
-            # Process results
-            for result in results:
-                if isinstance(result, Exception):
-                    stats['errors'] += 1
-                    logger.error(f"Error warming up key: {result}")
-                elif isinstance(result, dict):
-                    stats['keys_processed'] += 1
-                    if result.get('loaded'):
-                        stats['keys_loaded'] += 1
-                    if result.get('skipped'):
-                        stats['skipped'] += 1
-            
-            duration = time.time() - start_time
-            stats['duration'] = duration
-            stats['end_time'] = datetime.now().isoformat()
-            
-            logger.info(
-                f"Cache warmup completed in {duration:.2f}s: "
-                f"{stats['keys_loaded']}/{stats['keys_processed']} keys loaded, "
-                f"{stats['errors']} errors, {stats['skipped']} skipped"
-            )
-            
-            # Update overall stats
-            self._warmup_stats = {
-                'last_warmup': stats['start_time'],
-                'duration': stats['duration'],
-                'keys_processed': stats['keys_processed'],
-                'keys_loaded': stats['keys_loaded'],
-                'errors': stats['errors'],
-                'skipped': stats['skipped']
-            }
-            
+        except Exception as e:
+            logger.error(f"Error during cache warmup: {e}")
+            stats["success"] = False
+            stats["reason"] = str(e)
             return stats
             
-        finally:
-            self._is_warming_up = False
+        # Calculate time taken
+        stats["time_taken"] = time.time() - start_time
+        stats["success"] = True
+        
+        logger.info(f"Cache warmup completed in {stats['time_taken']:.2f}s: "
+                  f"{stats['loaded_keys']}/{stats['total_keys']} keys loaded, "
+                  f"{stats['errors']} errors, {stats['skipped']} skipped")
+                  
+        return stats
     
     async def _warmup_key(self, cache_obj: Any, key: str, semaphore: asyncio.Semaphore) -> Dict[str, Any]:
         """Warm up a single key in the cache.

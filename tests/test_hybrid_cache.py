@@ -109,10 +109,10 @@ async def test_read_through_caching(layered_config):
     await asyncio.sleep(0.1)
     
     # Now the value should be in memory (if read-through is working)
-    if cache.config.read_through:
+    if cache._config.read_through:
         mem_found, mem_value = await memory_layer.get(namespaced_key)
-        assert mem_found, "Value should now be in memory due to read-through"
-        assert mem_value == "disk_value"
+        assert mem_found, "Value should be populated in memory via read-through"
+        assert mem_value == "disk_value", "Value in memory should match the disk value"
     
     # Modify disk layer directly
     await disk_layer.set(namespaced_key, "updated_value")

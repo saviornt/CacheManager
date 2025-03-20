@@ -1,5 +1,16 @@
-"""Utility functions and helpers for the CacheManager package."""
+"""Utility modules for CacheManager."""
 
-from .serialization import serialize, deserialize
+from .namespacing import NamespaceManager
+from .serialization import Serializer
+from .disk_cache import DiskCacheManager
+from .initialization import CacheInitializer
+from .compression import compress_data, decompress_data
 
-__all__ = ["serialize", "deserialize"] 
+__all__ = [
+    'NamespaceManager',
+    'Serializer',
+    'DiskCacheManager',
+    'CacheInitializer',
+    'compress_data',
+    'decompress_data'
+] 

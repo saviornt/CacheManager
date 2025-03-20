@@ -11,9 +11,10 @@ import asyncio
 import os
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Any, Callable, Set, Union, Tuple
-from collections import deque
+from typing import Dict, List, Optional, Any, Callable
+from collections import deque, defaultdict
 from functools import wraps
+import threading
 
 logger = logging.getLogger(__name__)
 
@@ -39,37 +40,42 @@ class CacheEvent(str, Enum):
     CLEAR = "clear"
 
 class TelemetryManager:
-    """Manages telemetry data collection and reporting.
+    """Manages telemetry collection for cache operations.
     
-    Collects metrics on cache operations, performance data, and provides
-    hooks for observability into the cache system.
+    Collects metrics on cache operations and can generate reports.
     """
-    
     def __init__(
         self, 
         enabled: bool = False,
         report_interval: int = 60,
-        max_metrics_history: int = 1000,
-        log_dir: str = "./logs"
+        log_dir: str = 'logs'
     ):
         """Initialize the telemetry manager.
         
         Args:
             enabled: Whether telemetry collection is enabled
-            report_interval: How often to report metrics (in seconds)
-            max_metrics_history: Max number of metric points to keep in history
-            log_dir: Directory for telemetry log files
+            report_interval: How often to generate reports (in seconds)
+            log_dir: Directory to store telemetry logs
         """
         self.enabled = enabled
         self.report_interval = report_interval
-        self.max_history = max_metrics_history
         self.log_dir = log_dir
         
-        # Metric storage
-        self._counters: Dict[str, int] = {}
-        self._gauges: Dict[str, float] = {}
-        self._timings: Dict[str, List[float]] = {}
-        self._histograms: Dict[str, Dict[int, int]] = {}
+        # Initialize metrics
+        self._timers = defaultdict(list)
+        self._counters = defaultdict(int)
+        self._gauges = {}
+        self._histograms = {}
+        
+        # Ensure necessary counters are initialized
+        self._counters['cache.hit'] = 0
+        self._counters['cache.miss'] = 0
+        self._counters['cache.set'] = 0
+        self._counters['cache.delete'] = 0
+        self._counters['cache.error'] = 0
+
+        # Setup lock for thread safety
+        self._lock = threading.RLock()
         
         # Metric history for time-series data
         self._metric_history: Dict[str, deque] = {}
@@ -243,13 +249,13 @@ class TelemetryManager:
             return
             
         full_name = self._get_metric_name(name, tags)
-        if full_name not in self._timings:
-            self._timings[full_name] = []
-        self._timings[full_name].append(value)
+        if full_name not in self._timers:
+            self._timers[full_name] = []
+        self._timers[full_name].append(value)
         
         # Limit the list size
-        if len(self._timings[full_name]) > 1000:
-            self._timings[full_name] = self._timings[full_name][-1000:]
+        if len(self._timers[full_name]) > 1000:
+            self._timers[full_name] = self._timers[full_name][-1000:]
         
         # Add to history
         self._add_to_history(full_name, value, MetricType.TIMING)
@@ -313,33 +319,37 @@ class TelemetryManager:
         })
     
     def get_metrics(self) -> Dict[str, Any]:
-        """Get current metrics snapshot.
+        """Get all recorded metrics.
         
         Returns:
-            Dict containing all current metric values
+            Dict[str, Any]: Dictionary of all metrics
         """
         if not self.enabled:
-            return {}
+            return {
+                "counters": {},
+                "gauges": {},
+                "timers": {},
+                "histograms": {}
+            }
             
-        metrics = {
-            "counters": self._counters.copy(),
-            "gauges": self._gauges.copy(),
-            "timings": {
-                k: {
-                    "count": len(v),
-                    "min": min(v) if v else 0,
-                    "max": max(v) if v else 0,
-                    "avg": sum(v) / len(v) if v else 0,
-                    "p95": sorted(v)[int(len(v) * 0.95)] if len(v) > 10 else None
-                } for k, v in self._timings.items()
-            },
-            "histograms": self._histograms.copy(),
-            "timestamp": time.time()
-        }
-        return metrics
+        with self._lock:
+            return {
+                "counters": self._counters.copy(),
+                "gauges": self._gauges.copy(),
+                "timers": {
+                    k: {
+                        "count": len(v),
+                        "min": min(v) if v else 0,
+                        "max": max(v) if v else 0,
+                        "avg": sum(v) / len(v) if v else 0,
+                        "p95": sorted(v)[int(len(v) * 0.95)] if len(v) > 10 else None
+                    } for k, v in self._timers.items()
+                },
+                "histograms": self._histograms.copy(),
+            }
     
     async def _periodic_report(self) -> None:
-        """Periodically write metrics report."""
+        """Run periodic metrics reporting task."""
         while True:
             try:
                 await asyncio.sleep(self.report_interval)
@@ -350,7 +360,7 @@ class TelemetryManager:
                 logger.error(f"Error in telemetry reporting: {e}")
     
     async def _write_metrics_report(self) -> None:
-        """Write current metrics to the telemetry log."""
+        """Write a metrics report to the log directory."""
         if not self.enabled:
             return
             
@@ -360,60 +370,82 @@ class TelemetryManager:
         except Exception as e:
             logger.error(f"Failed to write metrics report: {e}")
 
+    def record_timer(self, name: str, value: float, tags: Optional[Dict[str, str]] = None) -> None:
+        """Record a timing metric.
+        
+        Args:
+            name: Name of the metric
+            value: Time value in seconds
+            tags: Optional tags to add
+        """
+        if not self.enabled:
+            return
+            
+        with self._lock:
+            full_name = self._get_metric_name(name, tags)
+            self._timers[full_name].append(value)
+            
+            # Limit the list size
+            if len(self._timers[full_name]) > 1000:
+                self._timers[full_name] = self._timers[full_name][-1000:]
+
+    def record_gauge(self, name: str, value: float, tags: Optional[Dict[str, str]] = None) -> None:
+        """Record a gauge metric.
+        
+        Args:
+            name: Name of the metric
+            value: Gauge value
+            tags: Optional tags to add
+        """
+        if not self.enabled:
+            return
+            
+        with self._lock:
+            full_name = self._get_metric_name(name, tags)
+            self._gauges[full_name] = value
+
 
 # Decorator for timing cache operations
-def timed_operation(event_name: str):
-    """Decorator to time a cache operation and record metrics.
+def timed_operation(operation_name: str, tags: Optional[Dict[str, str]] = None) -> Callable:
+    """Decorator to time operations and record metrics.
     
     Args:
-        event_name: The name of the operation to time
-        
+        operation_name: Name of the operation being timed
+        tags: Optional tags to add to the metric
+    
     Returns:
-        Decorator function that times the operation
+        Callable: Decorator function
     """
-    def decorator(func):
+    def decorator(func: Callable) -> Callable:
         @wraps(func)
-        async def wrapper(self, *args, **kwargs):
-            # Skip if telemetry is disabled or not initialized
-            if not hasattr(self, '_telemetry') or not self._telemetry.enabled:
+        async def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
+            # Skip timing if telemetry is disabled
+            if not hasattr(self, '_telemetry') or not self._telemetry or not self._telemetry.enabled:
                 return await func(self, *args, **kwargs)
-            
-            # Start timing
+                
             start_time = time.time()
-            
             try:
-                # Execute the function
                 result = await func(self, *args, **kwargs)
                 
-                # Record successful operation timing
-                duration_ms = (time.time() - start_time) * 1000
-                self._telemetry.timing(
-                    f"cache.{event_name}.duration", 
-                    duration_ms,
-                    {"success": "true"}
-                )
+                # Record operation time
+                elapsed = time.time() - start_time
+                self._telemetry.record_timer(f"cache.{operation_name}.time", elapsed, tags)
+                
+                # Record operation counter
+                self._telemetry._counters[f"cache.{operation_name}"] += 1
+                
+                # For get operations, record hit or miss
+                if operation_name == 'get' and args:
+                    if result is not None:
+                        self._telemetry._counters['cache.hit'] += 1
+                    else:
+                        self._telemetry._counters['cache.miss'] += 1
                 
                 return result
             except Exception as e:
-                # Record failed operation timing
-                duration_ms = (time.time() - start_time) * 1000
-                self._telemetry.timing(
-                    f"cache.{event_name}.duration", 
-                    duration_ms,
-                    {"success": "false", "error": str(type(e).__name__)}
-                )
-                
-                # Record error event
-                self._telemetry._record_event(
-                    CacheEvent.ERROR,
-                    {
-                        "operation": event_name,
-                        "error": str(e),
-                        "error_type": str(type(e).__name__)
-                    }
-                )
-                
-                # Re-raise the exception
+                # Record error
+                logger.error(f"Error in timed operation {operation_name}: {e}")
+                self._telemetry._counters['cache.error'] += 1
                 raise
                 
         return wrapper

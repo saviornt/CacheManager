@@ -6,7 +6,7 @@ import time
 import os
 import socket
 from pathlib import Path
-from typing import Dict, List, Set, Any
+from typing import Dict, List, Set, Any, Optional
 
 # Create a directory for test results if it doesn't exist
 results_dir = Path("tests/results")
@@ -38,7 +38,7 @@ def pytest_collection_modifyitems(session: Any, config: Any, items: List[Any]) -
     processed_modules = set()
     
     # Group tests by module
-    modules_to_tests = {}
+    modules_to_tests: Dict[str, List[str]] = {}
     for item in items:
         module_path = item.nodeid.split("::")[0]
         module_name = os.path.basename(module_path).replace(".py", "")
@@ -77,11 +77,12 @@ def pytest_collection_modifyitems(session: Any, config: Any, items: List[Any]) -
                 f.write(f"{idx}. {test}\n")
             f.write("\n" + "=" * 80 + "\n\n")
 
-def _get_module_file(nodeid: str, config: Any) -> Path:
+def _get_module_file(nodeid: str, config: Any) -> Optional[Path]:
     """Helper function to get the module-specific result file."""
     module_path = nodeid.split("::")[0]
     module_name = os.path.basename(module_path).replace(".py", "")
-    return config.module_result_files.get(module_name)
+    result = config.module_result_files.get(module_name)
+    return result if result is not None else None
 
 @pytest.hookimpl(trylast=True)
 def pytest_runtest_setup(item: Any) -> None:
@@ -103,7 +104,7 @@ def pytest_runtest_setup(item: Any) -> None:
         result_file = _get_module_file(item.nodeid, item.config)
         if result_file:
             with open(result_file, "a") as f:
-                f.write(f"Running Tests:\n")
+                f.write("Running Tests:\n")
                 f.write("-" * 80 + "\n\n")
 
 @pytest.hookimpl(trylast=True)

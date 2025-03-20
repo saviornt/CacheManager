@@ -1,0 +1,13 @@
+Improve documentation structure and organization
+
+- Fixed header underlines in all RST files for consistent formatting
+- Created placeholder documentation for advanced features (security, resilience, etc.)
+- Added detailed telemetry documentation
+- Updated .gitignore to exclude documentation build artifacts
+- Created comprehensive READMEs for project root and docs directory
+- Organized documentation maintenance scripts in docs/scripts
+- Fixed duplicate object description warnings in API documentation
+- Added documentation for using the cached decorator
+- Built HTML, PDF, and Markdown documentation versions
+
+These improvements make the documentation more complete, consistent, and maintainable. All documentation files now have consistent header formatting, and placeholder files exist for all advanced features, which will make it easier to add detailed documentation in the future. 

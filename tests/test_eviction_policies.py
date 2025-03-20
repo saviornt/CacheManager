@@ -2,13 +2,14 @@
 
 import os
 import pytest
-import asyncio
+from pathlib import Path
+from typing import Dict
 
 from src.cache_manager import CacheManager
 from src.cache_config import CacheConfig, EvictionPolicy, CacheLayerType, CacheLayerConfig
 
 @pytest.fixture
-def lru_config(tmp_path):
+def lru_config(tmp_path: Path) -> CacheConfig:
     """Fixture providing cache config with LRU eviction policy."""
     cache_dir = tmp_path / "cache_lru"
     os.makedirs(cache_dir, exist_ok=True)
@@ -27,7 +28,7 @@ def lru_config(tmp_path):
     )
 
 @pytest.fixture
-def fifo_config(tmp_path):
+def fifo_config(tmp_path: Path) -> CacheConfig:
     """Fixture providing cache config with FIFO eviction policy."""
     cache_dir = tmp_path / "cache_fifo"
     os.makedirs(cache_dir, exist_ok=True)
@@ -46,7 +47,7 @@ def fifo_config(tmp_path):
     )
 
 @pytest.fixture
-def lfu_config(tmp_path):
+def lfu_config(tmp_path: Path) -> CacheConfig:
     """Fixture providing cache config with LFU eviction policy."""
     cache_dir = tmp_path / "cache_lfu"
     os.makedirs(cache_dir, exist_ok=True)
@@ -65,7 +66,7 @@ def lfu_config(tmp_path):
     )
 
 @pytest.mark.asyncio
-async def test_lru_eviction(lru_config):
+async def test_lru_eviction(lru_config: CacheConfig) -> None:
     """Test the Least Recently Used eviction policy."""
     print("\nTesting LRU eviction policy...")
     cache = CacheManager(config=lru_config)
@@ -108,7 +109,7 @@ async def test_lru_eviction(lru_config):
     await cache.close()
 
 @pytest.mark.asyncio
-async def test_fifo_eviction(fifo_config):
+async def test_fifo_eviction(fifo_config: CacheConfig) -> None:
     """Test the First In First Out eviction policy."""
     print("\nTesting FIFO eviction policy...")
     cache = CacheManager(config=fifo_config)
@@ -151,7 +152,7 @@ async def test_fifo_eviction(fifo_config):
     await cache.close()
 
 @pytest.mark.asyncio
-async def test_lfu_eviction(lfu_config):
+async def test_lfu_eviction(lfu_config: CacheConfig) -> None:
     """Test the Least Frequently Used eviction policy."""
     print("\nTesting LFU eviction policy...")
     cache = CacheManager(config=lfu_config)
@@ -209,7 +210,7 @@ async def test_lfu_eviction(lfu_config):
     await cache.close()
 
 @pytest.mark.asyncio
-async def test_different_eviction_policies_comparison():
+async def test_different_eviction_policies_comparison() -> None:
     """Compare behavior of different eviction policies."""
     print("\nComparing different eviction policies...")
     
@@ -218,7 +219,7 @@ async def test_different_eviction_policies_comparison():
     temp_dir = tempfile.mkdtemp()
     
     # Test sequence and access patterns are the same for all policies
-    async def run_test_sequence(cache, policy_name):
+    async def run_test_sequence(cache: CacheManager, policy_name: str) -> Dict[str, bool]:
         print(f"\n  Testing with {policy_name} policy...")
         
         # Insert 5 keys
@@ -238,7 +239,7 @@ async def test_different_eviction_policies_comparison():
         memory_layer._evict_if_needed()
         
         # Check which keys are in memory
-        result = {}
+        result: Dict[str, bool] = {}
         for i in range(1, 7):
             key = f"key{i}"
             namespaced_key = cache._namespace_key(key)

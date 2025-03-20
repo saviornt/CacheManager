@@ -8,9 +8,9 @@ import logging
 from typing import Any, Dict, List, Optional, Tuple
 from threading import RLock
 
+from .base_layer import BaseCacheLayer
 from ..core.exceptions import CacheStorageError
 from ..core.circuit_breaker import CircuitBreaker
-from .base_layer import BaseCacheLayer
 
 logger = logging.getLogger(__name__)
 
@@ -65,11 +65,15 @@ class DiskLayer(BaseCacheLayer):
     def _load_metadata(self) -> None:
         """Load metadata from disk if it exists."""
         try:
+            # Create parent directory for metadata file if it doesn't exist
+            metadata_dir = os.path.dirname(self._metadata_path)
+            os.makedirs(metadata_dir, exist_ok=True)
+            
             # Create empty metadata if file doesn't exist
             if not os.path.exists(self._metadata_path):
-                with open(self._metadata_path, 'wb') as f:
-                    # Write empty dictionary
-                    f.write(b'{}\n')
+                with shelve.open(self._metadata_path, flag='c') as shelf:
+                    # Initialize empty shelf
+                    pass
                 self._metadata = {}
                 return
                 
@@ -88,6 +92,10 @@ class DiskLayer(BaseCacheLayer):
     def _save_metadata(self) -> None:
         """Save metadata to disk."""
         try:
+            # Ensure directory exists
+            metadata_dir = os.path.dirname(self._metadata_path)
+            os.makedirs(metadata_dir, exist_ok=True)
+            
             with shelve.open(self._metadata_path, flag='n') as shelf:
                 # Save all items
                 with self._lock:

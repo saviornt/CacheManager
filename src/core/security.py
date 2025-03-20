@@ -10,7 +10,7 @@ import hashlib
 import hmac
 import logging
 import time
-from typing import Any, Dict, Optional, Callable, Union, Tuple
+from typing import Any, Dict, Optional, Callable, Set
 from functools import wraps
 
 from cryptography.fernet import Fernet, InvalidToken
@@ -257,48 +257,53 @@ class DataSigner:
 
 
 class AccessControl:
-    """Provides access control for cache operations.
+    """Access control system for cache operations.
     
-    Controls which operations are allowed on which cache keys based on
-    configurable policies.
+    Provides role-based access control for cache operations.
     """
-    
     def __init__(self, enabled: bool = False):
-        """Initialize access control.
+        """Initialize access control system.
         
         Args:
             enabled: Whether access control is enabled
         """
         self.enabled = enabled
-        self._access_policies: Dict[str, Dict[str, Any]] = {}
-        self._audit_callback: Optional[Callable[[Dict[str, Any]], None]] = None
-    
-    def add_policy(
-        self,
-        pattern: str,
-        allow_read: bool = True,
-        allow_write: bool = True,
-        allow_delete: bool = True,
-        required_roles: Optional[set] = None
-    ) -> None:
-        """Add an access policy for a key pattern.
+        self._access_policies = {}
+        self._permission_checks = []
+        
+        # Add default policy if enabled
+        if enabled:
+            # Default policy allows read for all keys
+            self.add_policy('*', allow_read=True, allow_write=False, allow_delete=False)
+        
+    def add_policy(self, key_pattern: str, 
+                   allow_read: bool = True, 
+                   allow_write: bool = False, 
+                   allow_delete: bool = False,
+                   required_roles: Optional[Set[str]] = None):
+        """Add an access policy for keys matching a pattern.
         
         Args:
-            pattern: Glob pattern to match cache keys
+            key_pattern: Pattern to match keys against (supports simple glob patterns)
             allow_read: Whether reading is allowed
             allow_write: Whether writing is allowed
             allow_delete: Whether deletion is allowed
-            required_roles: Set of roles required for access
+            required_roles: Set of roles required to access matching keys
         """
-        if not self.enabled:
-            return
-            
-        self._access_policies[pattern] = {
-            'allow_read': allow_read,
-            'allow_write': allow_write,
-            'allow_delete': allow_delete,
+        self._access_policies[key_pattern] = {
+            'read': allow_read,
+            'write': allow_write,
+            'delete': allow_delete,
             'required_roles': required_roles or set()
         }
+        
+    def add_permission_check(self, check_func: Callable[[str, str], bool]):
+        """Add a custom permission check function.
+        
+        Args:
+            check_func: Function that takes (operation, key) and returns True if allowed
+        """
+        self._permission_checks.append(check_func)
     
     def set_audit_callback(self, callback: Callable[[Dict[str, Any]], None]) -> None:
         """Set a callback function for audit logging.
@@ -310,16 +315,16 @@ class AccessControl:
     
     def check_access(
         self,
+        user: Optional[Dict[str, Any]],
         key: str,
-        operation: str,
-        user: Optional[Dict[str, Any]] = None
+        operation: str
     ) -> bool:
         """Check if an operation is allowed on a key.
         
         Args:
+            user: Optional user information including roles
             key: Cache key
             operation: Operation type ('read', 'write', 'delete')
-            user: Optional user information including roles
             
         Returns:
             bool: True if access is allowed, False otherwise
@@ -346,105 +351,120 @@ class AccessControl:
                 # Simple glob matching (could be enhanced with regex)
                 if self._match_pattern(pattern, key):
                     matching_policies.append(policy)
-            
+                    
             # If no policies match, default to deny
             if not matching_policies:
                 raise AuthenticationError(f"No access policy matches key: {key}")
-            
-            # Check each matching policy
+                
+            # Check policies
             for policy in matching_policies:
                 # Check operation permission
-                if operation == 'read' and not policy['allow_read']:
-                    continue
-                elif operation == 'write' and not policy['allow_write']:
-                    continue
-                elif operation == 'delete' and not policy['allow_delete']:
-                    continue
-                
-                # Check roles if required
-                required_roles = policy['required_roles']
-                if required_roles:
-                    if not user or 'roles' not in user:
+                operation_type = operation
+                match operation_type:
+                    case "read":
+                        if not policy.get('read', False):
+                            continue
+                    case "write":
+                        if not policy.get('write', False):
+                            continue
+                    case "delete":
+                        if not policy.get('delete', False):
+                            continue
+                    case _:
+                        # Unknown operation, default to deny
                         continue
                     
-                    user_roles = set(user['roles'])
-                    if not required_roles.issubset(user_roles):
-                        continue
-                
-                # If we get here, access is granted
+                # Check roles if required
+                required_roles = policy['required_roles']
+                if required_roles and (not user or not self._has_roles(user, required_roles)):
+                    continue
+                    
+                # Passed all checks for this policy
                 audit_info['access_granted'] = True
                 
-                # Call audit callback if set
-                if self._audit_callback:
+                # Run audit callback if configured
+                if hasattr(self, '_audit_callback') and self._audit_callback:
                     self._audit_callback(audit_info)
+                    
+                # Check custom permission functions
+                for check_func in self._permission_checks:
+                    if not check_func(operation, key):
+                        raise AuthenticationError(f"Custom check denied access to {key}")
                 
                 return True
-            
-            # If no policy grants access, deny
+                
+            # No matching policy granted access
             raise AuthenticationError(
-                f"Access denied for operation {operation} on key: {key}"
+                f"Access denied: {operation} operation not allowed on {key}"
             )
             
-        except AuthenticationError:
-            # Call audit callback if set
-            if self._audit_callback:
-                self._audit_callback(audit_info)
-            raise
-        except Exception as e:
-            # Log unexpected errors
-            logger.error(f"Error in access control: {e}")
-            
-            # Call audit callback if set
-            if self._audit_callback:
+        except AuthenticationError as e:
+            # Record denial in audit log
+            if hasattr(self, '_audit_callback') and self._audit_callback:
                 audit_info['error'] = str(e)
                 self._audit_callback(audit_info)
-            
-            # Default to deny on errors
-            raise AuthenticationError(f"Access control error: {e}") from e
+                
+            raise
     
     def _match_pattern(self, pattern: str, key: str) -> bool:
         """Match a key against a pattern.
         
-        Currently implements simple glob matching with * as wildcard.
-        
         Args:
-            pattern: Glob pattern
-            key: Cache key
+            pattern: Pattern to match against
+            key: Cache key to check
             
         Returns:
-            bool: True if pattern matches key
+            bool: True if the key matches the pattern, False otherwise
         """
+        # Handle wildcard patterns
         if pattern == '*':
             return True
             
+        # Handle prefix wildcards
         if pattern.endswith('*'):
             prefix = pattern[:-1]
             return key.startswith(prefix)
             
+        # Handle suffix wildcards
         if pattern.startswith('*'):
             suffix = pattern[1:]
             return key.endswith(suffix)
             
-        if '*' in pattern:
-            parts = pattern.split('*')
-            if key.startswith(parts[0]) and key.endswith(parts[-1]):
-                return True
-                
+        # Exact match
         return pattern == key
+        
+    def _has_roles(self, user: Dict[str, Any], required_roles: Set[str]) -> bool:
+        """Check if a user has the required roles.
+        
+        Args:
+            user: User information dictionary
+            required_roles: Set of roles required for access
+            
+        Returns:
+            bool: True if the user has all required roles, False otherwise
+        """
+        if not required_roles:
+            return True
+            
+        if 'roles' not in user:
+            return False
+            
+        user_roles = set(user['roles'])
+        return required_roles.issubset(user_roles)
 
 
-def require_permission(operation: str):
-    """Decorator to enforce access control on cache operations.
+def require_permission(operation: str) -> Callable:
+    """Decorator to enforce access control for cache operations.
     
     Args:
-        operation: Type of operation ('read', 'write', 'delete')
+        operation: The operation being performed (e.g., "read", "write")
         
     Returns:
-        Decorator function
+        Callable: Decorator function
     """
-    def decorator(func):
+    def decorator(func: Callable) -> Callable:
         @wraps(func)
-        async def wrapper(self, *args, **kwargs):
+        async def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
             # Skip if access control is not enabled
             if not hasattr(self, '_access_control') or not self._access_control.enabled:
                 return await func(self, *args, **kwargs)
@@ -460,7 +480,7 @@ def require_permission(operation: str):
             user = getattr(self, '_current_user', None)
             
             # Check access
-            self._access_control.check_access(key, operation, user)
+            self._access_control.check_access(user, key, operation)
             
             # If access is allowed, proceed with the function
             return await func(self, *args, **kwargs)

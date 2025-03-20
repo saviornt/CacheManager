@@ -11,6 +11,7 @@ __pycache__/
 
 # Logs
 *.log
+logs/*.jsonl
 
 # Coverage reports
 .coverage
@@ -24,3 +25,41 @@ htmlcov/
 
 # Cache
 .cache/
+
+# Ruff
+.ruff_cache/
+
+# mypy
+.mypy_cache/
+
+# Sphinx documentation
+docs/build/
+docs/source/_build/
+docs/_autosummary/
+docs/source/_static/
+*.doctree
+docs/**/*.md
+docs/**/*.pdf
+docs/*.pdf
+
+# Compiled Python modules
+*.so
+*.pyd
+*.dll
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+wheels/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Temporary files
+tmp/
+temp/

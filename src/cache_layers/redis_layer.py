@@ -348,9 +348,18 @@ class RedisLayer(BaseCacheLayer):
     async def close(self) -> None:
         """Close the Redis client and release resources."""
         if self._redis_client:
-            await self._redis_client.close()
-            self._redis_client = None
+            try:
+                await self._redis_client.aclose()
+                self._redis_client = None
+            except Exception as e:
+                logger.error(f"Error closing Redis client: {e}", 
+                           extra={'correlation_id': self._correlation_id})
         
+        # Clean up connection pool
         if self._connection_pool:
-            self._connection_pool.disconnect()
-            self._connection_pool = None 
+            try:
+                self._connection_pool.disconnect()
+                self._connection_pool = None
+            except Exception as e:
+                logger.error(f"Error disconnecting Redis connection pool: {e}", 
+                           extra={'correlation_id': self._correlation_id}) 
