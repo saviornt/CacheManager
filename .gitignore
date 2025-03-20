@@ -33,14 +33,11 @@ htmlcov/
 .mypy_cache/
 
 # Sphinx documentation
-docs/build/
 docs/source/_build/
 docs/_autosummary/
 docs/source/_static/
+docs/source/_templates/
 *.doctree
-docs/**/*.md
-docs/**/*.pdf
-docs/*.pdf
 
 # Compiled Python modules
 *.so
