@@ -1,9 +1,0 @@
-Metadata-Version: 2.2
-Name: cachemanager
-Version: 0.1.0
-Requires-Dist: pydantic
-Requires-Dist: python-dotenv
-Requires-Dist: tenacity
-Requires-Dist: pytest
-Requires-Dist: pytest-asyncio
-Dynamic: requires-dist

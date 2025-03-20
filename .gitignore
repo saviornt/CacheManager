@@ -19,9 +19,6 @@ htmlcov/
 # Pytest cache
 .pytest_cache/
 
-# Tests
-tests/
-
 # Cursor
 .cursor/
 
