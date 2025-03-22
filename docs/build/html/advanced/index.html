@@ -1,0 +1,224 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced Features &mdash; CacheManager 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hybrid Caching" href="hybrid_caching.html" />
+    <link rel="prev" title="Utilities" href="../api/utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CacheManager
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hybrid_caching.html">Hybrid Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eviction_strategies.html">Eviction Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html">Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespacing.html">Namespacing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html">Telemetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="security.html">Security</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resilience.html">Resilience</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bulk_operations.html">Bulk Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache_warmup.html">Cache Warmup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adaptive_ttl.html">Adaptive TTL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distributed_features.html">Distributed Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CacheManager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Advanced Features</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/advanced/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="advanced-features">
+<h1>Advanced Features<a class="headerlink" href="#advanced-features" title="Link to this heading"></a></h1>
+<p>This section covers advanced features and usage patterns for CacheManager.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="hybrid_caching.html">Hybrid Caching</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hybrid_caching.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hybrid_caching.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hybrid_caching.html#key-options">Key Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hybrid_caching.html#cache-flow">Cache Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hybrid_caching.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hybrid_caching.html#example-use-case">Example Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hybrid_caching.html#advanced-configuration">Advanced Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="eviction_strategies.html">Eviction Strategies</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eviction_strategies.html#built-in-eviction-policies">Built-in Eviction Policies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eviction_strategies.html#hybrid-eviction-policies">Hybrid Eviction Policies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eviction_strategies.html#time-based-eviction">Time-Based Eviction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eviction_strategies.html#eviction-events">Eviction Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eviction_strategies.html#implementation-details">Implementation Details</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="compression.html">Compression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#compression-algorithms">Compression Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#selective-compression">Selective Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#layer-specific-compression">Layer-Specific Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html#implementation-details">Implementation Details</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="namespacing.html">Namespacing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="namespacing.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespacing.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespacing.html#hierarchical-namespaces">Hierarchical Namespaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespacing.html#dynamic-namespaces">Dynamic Namespaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespacing.html#clearing-by-namespace">Clearing by Namespace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespacing.html#namespace-patterns-and-strategies">Namespace Patterns and Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespacing.html#implementation-details">Implementation Details</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="telemetry.html">Telemetry</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html#available-metrics">Available Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html#accessing-metrics">Accessing Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html#exporting-metrics">Exporting Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html#alerting">Alerting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html#visualization">Visualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="security.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="security.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="security.html#configuration-options">Configuration Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="security.html#advanced-usage">Advanced Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="resilience.html">Resilience</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="resilience.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resilience.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resilience.html#configuration-options">Configuration Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resilience.html#advanced-usage">Advanced Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bulk_operations.html">Bulk Operations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bulk_operations.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bulk_operations.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bulk_operations.html#configuration-options">Configuration Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bulk_operations.html#advanced-usage">Advanced Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cache_warmup.html">Cache Warmup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cache_warmup.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache_warmup.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache_warmup.html#configuration-options">Configuration Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache_warmup.html#advanced-usage">Advanced Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="adaptive_ttl.html">Adaptive TTL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adaptive_ttl.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adaptive_ttl.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adaptive_ttl.html#configuration-options">Configuration Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adaptive_ttl.html#advanced-usage">Advanced Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="distributed_features.html">Distributed Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="distributed_features.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distributed_features.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distributed_features.html#configuration-options">Configuration Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distributed_features.html#advanced-usage">Advanced Usage</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../api/utils.html" class="btn btn-neutral float-left" title="Utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hybrid_caching.html" class="btn btn-neutral float-right" title="Hybrid Caching" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CacheManager Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuration &mdash; CacheManager 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api/index.html" />
+    <link rel="prev" title="Quickstart" href="quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            CacheManager
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-configuration">Basic Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#environment-variables">Environment Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multi-layer-caching">Multi-layer Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compression-settings">Compression Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#security-settings">Security Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#telemetry-and-monitoring">Telemetry and Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-features">Advanced Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#complete-configuration-reference">Complete Configuration Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced/index.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">CacheManager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/configuration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h1>
+<p>CacheManager offers extensive configuration options to customize caching behavior. This page covers the main configuration options and how to use them.</p>
+<section id="basic-configuration">
+<h2>Basic Configuration<a class="headerlink" href="#basic-configuration" title="Link to this heading"></a></h2>
+<p>The simplest way to configure the cache is by creating a <code class="docutils literal notranslate"><span class="pre">CacheConfig</span></code> instance with your desired settings:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.cache_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">CacheManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.cache_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">CacheConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">CacheConfig</span><span class="p">(</span>
+    <span class="n">cache_max_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">cache_ttl</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>  <span class="c1"># 1 hour in seconds</span>
+    <span class="n">eviction_policy</span><span class="o">=</span><span class="s2">&quot;lru&quot;</span>
+<span class="p">)</span>
+
+<span class="n">cache</span> <span class="o">=</span> <span class="n">CacheManager</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="environment-variables">
+<h2>Environment Variables<a class="headerlink" href="#environment-variables" title="Link to this heading"></a></h2>
+<p>CacheManager supports configuration via environment variables. You can set these in your environment or use a <code class="docutils literal notranslate"><span class="pre">.env</span></code> file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic cache settings</span>
+<span class="nv">CACHE_MAX_SIZE</span><span class="o">=</span><span class="m">5000</span>
+<span class="nv">CACHE_TTL</span><span class="o">=</span><span class="m">300</span>.0
+<span class="nv">EVICTION_POLICY</span><span class="o">=</span>lru
+<span class="nv">CACHE_NAMESPACE</span><span class="o">=</span>myapp
+
+<span class="c1"># Redis settings</span>
+<span class="nv">USE_REDIS</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">REDIS_URL</span><span class="o">=</span>redis://localhost
+<span class="nv">REDIS_PORT</span><span class="o">=</span><span class="m">6379</span>
+</pre></div>
+</div>
+</section>
+<section id="multi-layer-caching">
+<h2>Multi-layer Caching<a class="headerlink" href="#multi-layer-caching" title="Link to this heading"></a></h2>
+<p>You can configure multiple cache layers with different characteristics:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.cache_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">CacheManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.cache_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">CacheConfig</span><span class="p">,</span> <span class="n">CacheLayerConfig</span><span class="p">,</span> <span class="n">CacheLayerType</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">CacheConfig</span><span class="p">(</span>
+    <span class="n">use_layered_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">cache_layers</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">CacheLayerConfig</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">CacheLayerType</span><span class="o">.</span><span class="n">MEMORY</span><span class="p">,</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+        <span class="n">CacheLayerConfig</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">CacheLayerType</span><span class="o">.</span><span class="n">REDIS</span><span class="p">,</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">3600</span><span class="p">),</span>
+        <span class="n">CacheLayerConfig</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">CacheLayerType</span><span class="o">.</span><span class="n">DISK</span><span class="p">,</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">86400</span><span class="p">)</span>
+    <span class="p">],</span>
+    <span class="n">write_through</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Write to all layers on set</span>
+    <span class="n">read_through</span><span class="o">=</span><span class="kc">True</span>    <span class="c1"># Check slower layers if not found in faster ones</span>
+<span class="p">)</span>
+
+<span class="n">cache</span> <span class="o">=</span> <span class="n">CacheManager</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="compression-settings">
+<h2>Compression Settings<a class="headerlink" href="#compression-settings" title="Link to this heading"></a></h2>
+<p>Enable compression for large cache entries:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">CacheConfig</span><span class="p">(</span>
+    <span class="n">enable_compression</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">compression_min_size</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>  <span class="c1"># Minimum size in bytes for compression</span>
+    <span class="n">compression_level</span><span class="o">=</span><span class="mi">6</span>         <span class="c1"># Compression level (1-9)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="security-settings">
+<h2>Security Settings<a class="headerlink" href="#security-settings" title="Link to this heading"></a></h2>
+<p>Enable encryption and data signing for sensitive data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">CacheConfig</span><span class="p">(</span>
+    <span class="n">enable_encryption</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">encryption_key</span><span class="o">=</span><span class="s2">&quot;your-secret-key&quot;</span><span class="p">,</span>
+    <span class="n">enable_data_signing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">signing_key</span><span class="o">=</span><span class="s2">&quot;your-signing-key&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="telemetry-and-monitoring">
+<h2>Telemetry and Monitoring<a class="headerlink" href="#telemetry-and-monitoring" title="Link to this heading"></a></h2>
+<p>Enable performance monitoring:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">CacheConfig</span><span class="p">(</span>
+    <span class="n">enable_telemetry</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">telemetry_interval</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Collect metrics every 60 seconds</span>
+    <span class="n">metrics_collection</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="advanced-features">
+<h2>Advanced Features<a class="headerlink" href="#advanced-features" title="Link to this heading"></a></h2>
+<p>For advanced features like adaptive TTL, distributed locking, or cache warmup, see the respective documentation sections in the Advanced Features guide.</p>
+</section>
+<section id="complete-configuration-reference">
+<h2>Complete Configuration Reference<a class="headerlink" href="#complete-configuration-reference" title="Link to this heading"></a></h2>
+<p>For a complete list of all configuration options, see the <a class="reference internal" href="api/cache_config.html"><span class="doc">Cache Configuration</span></a> API reference.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quickstart" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CacheManager Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv
+.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs
+*.log
+logs/*.jsonl
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Pytest cache
+.pytest_cache/
+
+# Cursor
+.cursor/
+
+# Cache
+.cache/
+
+# Ruff
+.ruff_cache/
+
+# mypy
+.mypy_cache/
+
+# Compiled Python modules
+*.so
+*.pyd
+*.dll
+
+# Distribution / packaging
+dist/
+
+# Exclude project build directory but not docs build
+/build/
+*.egg-info/
+wheels/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Temporary files
+tmp/
+temp/
+
+# Sphinx documentation
+docs/scripts/
+docs/source/
+docs/*.py
+.buildinfo
+.buildinfo.bak
+*.inv
+*.doctree
+.doctrees
+make.bat
+Makefile
+
+# Don't ignore the build directory for documentation
+!docs/build/

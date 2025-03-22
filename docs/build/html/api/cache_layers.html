@@ -1,0 +1,1453 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cache Layers &mdash; CacheManager 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Decorators" href="decorators.html" />
+    <link rel="prev" title="Cache Configuration" href="cache_config.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CacheManager
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cache_manager.html">Cache Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache_config.html">Cache Configuration</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Cache Layers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.cache_layers.BaseCacheLayer"><code class="docutils literal notranslate"><span class="pre">BaseCacheLayer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.BaseCacheLayer.__init__"><code class="docutils literal notranslate"><span class="pre">BaseCacheLayer.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.BaseCacheLayer.clear"><code class="docutils literal notranslate"><span class="pre">BaseCacheLayer.clear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.BaseCacheLayer.close"><code class="docutils literal notranslate"><span class="pre">BaseCacheLayer.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.BaseCacheLayer.delete"><code class="docutils literal notranslate"><span class="pre">BaseCacheLayer.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.BaseCacheLayer.get"><code class="docutils literal notranslate"><span class="pre">BaseCacheLayer.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.BaseCacheLayer.get_many"><code class="docutils literal notranslate"><span class="pre">BaseCacheLayer.get_many()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.BaseCacheLayer.set"><code class="docutils literal notranslate"><span class="pre">BaseCacheLayer.set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.BaseCacheLayer.set_many"><code class="docutils literal notranslate"><span class="pre">BaseCacheLayer.set_many()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#src.cache_layers.MemoryLayer"><code class="docutils literal notranslate"><span class="pre">MemoryLayer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.MemoryLayer.__init__"><code class="docutils literal notranslate"><span class="pre">MemoryLayer.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.MemoryLayer.clear"><code class="docutils literal notranslate"><span class="pre">MemoryLayer.clear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.MemoryLayer.close"><code class="docutils literal notranslate"><span class="pre">MemoryLayer.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.MemoryLayer.delete"><code class="docutils literal notranslate"><span class="pre">MemoryLayer.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.MemoryLayer.get"><code class="docutils literal notranslate"><span class="pre">MemoryLayer.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.MemoryLayer.get_many"><code class="docutils literal notranslate"><span class="pre">MemoryLayer.get_many()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.MemoryLayer.set"><code class="docutils literal notranslate"><span class="pre">MemoryLayer.set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.MemoryLayer.set_many"><code class="docutils literal notranslate"><span class="pre">MemoryLayer.set_many()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#src.cache_layers.RedisLayer"><code class="docutils literal notranslate"><span class="pre">RedisLayer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.RedisLayer.__init__"><code class="docutils literal notranslate"><span class="pre">RedisLayer.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.RedisLayer.clear"><code class="docutils literal notranslate"><span class="pre">RedisLayer.clear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.RedisLayer.close"><code class="docutils literal notranslate"><span class="pre">RedisLayer.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.RedisLayer.delete"><code class="docutils literal notranslate"><span class="pre">RedisLayer.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.RedisLayer.get"><code class="docutils literal notranslate"><span class="pre">RedisLayer.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.RedisLayer.get_many"><code class="docutils literal notranslate"><span class="pre">RedisLayer.get_many()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.RedisLayer.set"><code class="docutils literal notranslate"><span class="pre">RedisLayer.set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.RedisLayer.set_many"><code class="docutils literal notranslate"><span class="pre">RedisLayer.set_many()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#src.cache_layers.DiskLayer"><code class="docutils literal notranslate"><span class="pre">DiskLayer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.DiskLayer.__init__"><code class="docutils literal notranslate"><span class="pre">DiskLayer.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.DiskLayer.clear"><code class="docutils literal notranslate"><span class="pre">DiskLayer.clear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.DiskLayer.close"><code class="docutils literal notranslate"><span class="pre">DiskLayer.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.DiskLayer.delete"><code class="docutils literal notranslate"><span class="pre">DiskLayer.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.DiskLayer.get"><code class="docutils literal notranslate"><span class="pre">DiskLayer.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.DiskLayer.get_many"><code class="docutils literal notranslate"><span class="pre">DiskLayer.get_many()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.DiskLayer.set"><code class="docutils literal notranslate"><span class="pre">DiskLayer.set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.DiskLayer.set_many"><code class="docutils literal notranslate"><span class="pre">DiskLayer.set_many()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.cache_layers.base_layer">Base Layer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.base_layer.BaseCacheLayer"><code class="docutils literal notranslate"><span class="pre">BaseCacheLayer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.cache_layers.memory_layer">Memory Layer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.memory_layer.MemoryLayer"><code class="docutils literal notranslate"><span class="pre">MemoryLayer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.cache_layers.redis_layer">Redis Layer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.redis_layer.RedisLayer"><code class="docutils literal notranslate"><span class="pre">RedisLayer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.cache_layers.disk_layer">Disk Layer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_layers.disk_layer.DiskLayer"><code class="docutils literal notranslate"><span class="pre">DiskLayer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="decorators.html">Decorators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eviction_policies.html">Eviction Policies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/index.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CacheManager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Cache Layers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/cache_layers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cache-layers">
+<h1>Cache Layers<a class="headerlink" href="#cache-layers" title="Link to this heading"></a></h1>
+<p>Classes that implement different storage backends for the cache system.</p>
+<p id="module-src.cache_layers">Cache layer implementations for different storage backends.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.cache_layers.BaseCacheLayer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.cache_layers.</span></span><span class="sig-name descname"><span class="pre">BaseCacheLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.BaseCacheLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class that defines the interface for all cache layers.</p>
+<p>All cache layer implementations must extend this class and implement
+the required methods.</p>
+<p>Initialize the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.BaseCacheLayer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.BaseCacheLayer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.BaseCacheLayer.clear">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.BaseCacheLayer.clear" title="Link to this definition"></a></dt>
+<dd><p>Clear all values in this cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if cleared successfully</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.BaseCacheLayer.close">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.BaseCacheLayer.close" title="Link to this definition"></a></dt>
+<dd><p>Close connections and release resources.</p>
+<p>Should be called when the cache layer is no longer needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.BaseCacheLayer.delete">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.BaseCacheLayer.delete" title="Link to this definition"></a></dt>
+<dd><p>Delete a value from the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key (already namespaced)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if deleted successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.BaseCacheLayer.get">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.BaseCacheLayer.get" title="Link to this definition"></a></dt>
+<dd><p>Get a value from the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key (already namespaced)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(found, value) tuple</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[bool, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.BaseCacheLayer.get_many">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.get_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.BaseCacheLayer.get_many" title="Link to this definition"></a></dt>
+<dd><p>Get multiple values from the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – List of cache keys (already namespaced)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping keys to their values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.BaseCacheLayer.set">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.BaseCacheLayer.set" title="Link to this definition"></a></dt>
+<dd><p>Set a value in the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key (already namespaced)</p></li>
+<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – The value to cache</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.BaseCacheLayer.set_many">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.set_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.BaseCacheLayer.set_many" title="Link to this definition"></a></dt>
+<dd><p>Set multiple values in the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Dictionary mapping keys to values</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all values were set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.cache_layers.MemoryLayer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.cache_layers.</span></span><span class="sig-name descname"><span class="pre">MemoryLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eviction_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">EvictionPolicy.LRU</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.MemoryLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#src.cache_layers.base_layer.BaseCacheLayer" title="src.cache_layers.base_layer.BaseCacheLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCacheLayer</span></code></a></p>
+<p>In-memory cache layer implementation.</p>
+<p>This layer stores cache data in memory for fast access. Data is lost when the
+process exits.</p>
+<p>Initialize the memory cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+<li><p><strong>max_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Maximum number of items to store in the cache</p></li>
+<li><p><strong>eviction_policy</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="eviction_policies.html#src.cache_config.EvictionPolicy" title="src.cache_config.EvictionPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">EvictionPolicy</span></code></a></span>) – Policy for evicting items when cache is full</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.MemoryLayer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eviction_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">EvictionPolicy.LRU</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.MemoryLayer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the memory cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+<li><p><strong>max_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Maximum number of items to store in the cache</p></li>
+<li><p><strong>eviction_policy</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="eviction_policies.html#src.cache_config.EvictionPolicy" title="src.cache_config.EvictionPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">EvictionPolicy</span></code></a></span>) – Policy for evicting items when cache is full</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.MemoryLayer.clear">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.MemoryLayer.clear" title="Link to this definition"></a></dt>
+<dd><p>Clear all values in the memory cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if cleared successfully</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.MemoryLayer.close">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.MemoryLayer.close" title="Link to this definition"></a></dt>
+<dd><p>Close the memory cache layer.</p>
+<p>For memory cache, this is a no-op as there are no connections to close.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.MemoryLayer.delete">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.MemoryLayer.delete" title="Link to this definition"></a></dt>
+<dd><p>Delete a value from the memory cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if deleted successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.MemoryLayer.get">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.MemoryLayer.get" title="Link to this definition"></a></dt>
+<dd><p>Get a value from the memory cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(found, value) tuple</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[bool, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.MemoryLayer.get_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.get_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.MemoryLayer.get_many" title="Link to this definition"></a></dt>
+<dd><p>Get multiple values from the memory cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – List of cache keys</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping keys to their values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.MemoryLayer.set">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.MemoryLayer.set" title="Link to this definition"></a></dt>
+<dd><p>Set a value in the memory cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p></li>
+<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – The value to cache</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.MemoryLayer.set_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.set_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.MemoryLayer.set_many" title="Link to this definition"></a></dt>
+<dd><p>Set multiple values in the memory cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Dictionary mapping keys to values</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all values were set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.cache_layers.RedisLayer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.cache_layers.</span></span><span class="sig-name descname"><span class="pre">RedisLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_min_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.RedisLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#src.cache_layers.base_layer.BaseCacheLayer" title="src.cache_layers.base_layer.BaseCacheLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCacheLayer</span></code></a></p>
+<p>Redis cache layer implementation.</p>
+<p>This layer stores cache data in a Redis server for shared access across
+multiple processes or machines.</p>
+<p>Initialize the Redis cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+<li><p><strong>redis_url</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – URL for connecting to Redis server</p></li>
+<li><p><strong>retry_attempts</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of retry attempts for Redis operations</p></li>
+<li><p><strong>retry_delay</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Delay between retries in seconds</p></li>
+<li><p><strong>enable_compression</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to enable compression</p></li>
+<li><p><strong>compression_min_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Minimum size for compression to be applied</p></li>
+<li><p><strong>compression_level</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Compression level (1-9) for zlib</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.RedisLayer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_min_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.RedisLayer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the Redis cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+<li><p><strong>redis_url</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – URL for connecting to Redis server</p></li>
+<li><p><strong>retry_attempts</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of retry attempts for Redis operations</p></li>
+<li><p><strong>retry_delay</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Delay between retries in seconds</p></li>
+<li><p><strong>enable_compression</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to enable compression</p></li>
+<li><p><strong>compression_min_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Minimum size for compression to be applied</p></li>
+<li><p><strong>compression_level</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Compression level (1-9) for zlib</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.RedisLayer.clear">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.RedisLayer.clear" title="Link to this definition"></a></dt>
+<dd><p>Clear all values in this Redis cache.</p>
+<p>Only clears keys with this instance’s namespace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if cleared successfully</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.RedisLayer.close">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.RedisLayer.close" title="Link to this definition"></a></dt>
+<dd><p>Close the Redis client and release resources.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.RedisLayer.delete">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.RedisLayer.delete" title="Link to this definition"></a></dt>
+<dd><p>Delete a value from the Redis cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if deleted successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.RedisLayer.get">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.RedisLayer.get" title="Link to this definition"></a></dt>
+<dd><p>Get a value from the Redis cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(found, value) tuple</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[bool, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.RedisLayer.get_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.get_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.RedisLayer.get_many" title="Link to this definition"></a></dt>
+<dd><p>Get multiple values from the Redis cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – List of cache keys</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping keys to their values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.RedisLayer.set">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.RedisLayer.set" title="Link to this definition"></a></dt>
+<dd><p>Set a value in the Redis cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p></li>
+<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – The value to cache</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.RedisLayer.set_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.set_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.RedisLayer.set_many" title="Link to this definition"></a></dt>
+<dd><p>Set multiple values in the Redis cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Dictionary mapping keys to values</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all values were set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.cache_layers.DiskLayer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.cache_layers.</span></span><span class="sig-name descname"><span class="pre">DiskLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.DiskLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#src.cache_layers.base_layer.BaseCacheLayer" title="src.cache_layers.base_layer.BaseCacheLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCacheLayer</span></code></a></p>
+<p>Disk-based cache layer implementation using Python’s shelve.</p>
+<p>This layer stores cache data on disk for persistence across process restarts.</p>
+<p>Initialize the disk cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+<li><p><strong>cache_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Directory to store cache files</p></li>
+<li><p><strong>cache_file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the cache file</p></li>
+<li><p><strong>retry_attempts</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of retry attempts for disk operations</p></li>
+<li><p><strong>retry_delay</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Delay between retries in seconds</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.DiskLayer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.DiskLayer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the disk cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+<li><p><strong>cache_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Directory to store cache files</p></li>
+<li><p><strong>cache_file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the cache file</p></li>
+<li><p><strong>retry_attempts</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of retry attempts for disk operations</p></li>
+<li><p><strong>retry_delay</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Delay between retries in seconds</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.DiskLayer.clear">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.DiskLayer.clear" title="Link to this definition"></a></dt>
+<dd><p>Clear all values in the disk cache.</p>
+<p>Only clears keys with this instance’s namespace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if cleared successfully</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.DiskLayer.close">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.DiskLayer.close" title="Link to this definition"></a></dt>
+<dd><p>Close the disk cache and save metadata.</p>
+<p>This should be called when the cache is no longer needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.DiskLayer.delete">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.DiskLayer.delete" title="Link to this definition"></a></dt>
+<dd><p>Delete a value from the disk cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key (already namespaced)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if deleted successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.DiskLayer.get">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.DiskLayer.get" title="Link to this definition"></a></dt>
+<dd><p>Get a value from the disk cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key (already namespaced)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(found, value) tuple</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[bool, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.DiskLayer.get_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.get_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.DiskLayer.get_many" title="Link to this definition"></a></dt>
+<dd><p>Get multiple values from the disk cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – List of cache keys (already namespaced)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping keys to their values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.DiskLayer.set">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.DiskLayer.set" title="Link to this definition"></a></dt>
+<dd><p>Set a value in the disk cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key (already namespaced)</p></li>
+<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – The value to cache</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.DiskLayer.set_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.set_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.DiskLayer.set_many" title="Link to this definition"></a></dt>
+<dd><p>Set multiple values in the disk cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Dictionary mapping keys to values</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all values were set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="module-src.cache_layers.base_layer">
+<span id="base-layer"></span><h2>Base Layer<a class="headerlink" href="#module-src.cache_layers.base_layer" title="Link to this heading"></a></h2>
+<p>Base abstract class for cache layers implementation.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.cache_layers.base_layer.BaseCacheLayer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.cache_layers.base_layer.</span></span><span class="sig-name descname"><span class="pre">BaseCacheLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.base_layer.BaseCacheLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class that defines the interface for all cache layers.</p>
+<p>All cache layer implementations must extend this class and implement
+the required methods.</p>
+<p>Initialize the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.base_layer.BaseCacheLayer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.base_layer.BaseCacheLayer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.base_layer.BaseCacheLayer.get">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.base_layer.BaseCacheLayer.get" title="Link to this definition"></a></dt>
+<dd><p>Get a value from the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key (already namespaced)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(found, value) tuple</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[bool, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.base_layer.BaseCacheLayer.set">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.base_layer.BaseCacheLayer.set" title="Link to this definition"></a></dt>
+<dd><p>Set a value in the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key (already namespaced)</p></li>
+<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – The value to cache</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.base_layer.BaseCacheLayer.delete">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.base_layer.BaseCacheLayer.delete" title="Link to this definition"></a></dt>
+<dd><p>Delete a value from the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key (already namespaced)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if deleted successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.base_layer.BaseCacheLayer.get_many">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.get_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.base_layer.BaseCacheLayer.get_many" title="Link to this definition"></a></dt>
+<dd><p>Get multiple values from the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – List of cache keys (already namespaced)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping keys to their values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.base_layer.BaseCacheLayer.set_many">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.set_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.base_layer.BaseCacheLayer.set_many" title="Link to this definition"></a></dt>
+<dd><p>Set multiple values in the cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Dictionary mapping keys to values</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all values were set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.base_layer.BaseCacheLayer.clear">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.base_layer.BaseCacheLayer.clear" title="Link to this definition"></a></dt>
+<dd><p>Clear all values in this cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if cleared successfully</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.base_layer.BaseCacheLayer.close">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/base_layer.html#BaseCacheLayer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.base_layer.BaseCacheLayer.close" title="Link to this definition"></a></dt>
+<dd><p>Close connections and release resources.</p>
+<p>Should be called when the cache layer is no longer needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.cache_layers.memory_layer">
+<span id="memory-layer"></span><h2>Memory Layer<a class="headerlink" href="#module-src.cache_layers.memory_layer" title="Link to this heading"></a></h2>
+<p>In-memory cache layer implementation.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.cache_layers.memory_layer.MemoryLayer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.cache_layers.memory_layer.</span></span><span class="sig-name descname"><span class="pre">MemoryLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eviction_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">EvictionPolicy.LRU</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.memory_layer.MemoryLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#src.cache_layers.base_layer.BaseCacheLayer" title="src.cache_layers.base_layer.BaseCacheLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCacheLayer</span></code></a></p>
+<p>In-memory cache layer implementation.</p>
+<p>This layer stores cache data in memory for fast access. Data is lost when the
+process exits.</p>
+<p>Initialize the memory cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+<li><p><strong>max_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Maximum number of items to store in the cache</p></li>
+<li><p><strong>eviction_policy</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="eviction_policies.html#src.cache_config.EvictionPolicy" title="src.cache_config.EvictionPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">EvictionPolicy</span></code></a></span>) – Policy for evicting items when cache is full</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.memory_layer.MemoryLayer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eviction_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">EvictionPolicy.LRU</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.memory_layer.MemoryLayer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the memory cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+<li><p><strong>max_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Maximum number of items to store in the cache</p></li>
+<li><p><strong>eviction_policy</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="eviction_policies.html#src.cache_config.EvictionPolicy" title="src.cache_config.EvictionPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">EvictionPolicy</span></code></a></span>) – Policy for evicting items when cache is full</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.memory_layer.MemoryLayer.get">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.memory_layer.MemoryLayer.get" title="Link to this definition"></a></dt>
+<dd><p>Get a value from the memory cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(found, value) tuple</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[bool, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.memory_layer.MemoryLayer.set">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.memory_layer.MemoryLayer.set" title="Link to this definition"></a></dt>
+<dd><p>Set a value in the memory cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p></li>
+<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – The value to cache</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.memory_layer.MemoryLayer.delete">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.memory_layer.MemoryLayer.delete" title="Link to this definition"></a></dt>
+<dd><p>Delete a value from the memory cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if deleted successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.memory_layer.MemoryLayer.get_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.get_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.memory_layer.MemoryLayer.get_many" title="Link to this definition"></a></dt>
+<dd><p>Get multiple values from the memory cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – List of cache keys</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping keys to their values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.memory_layer.MemoryLayer.set_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.set_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.memory_layer.MemoryLayer.set_many" title="Link to this definition"></a></dt>
+<dd><p>Set multiple values in the memory cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Dictionary mapping keys to values</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all values were set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.memory_layer.MemoryLayer.clear">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.memory_layer.MemoryLayer.clear" title="Link to this definition"></a></dt>
+<dd><p>Clear all values in the memory cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if cleared successfully</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.memory_layer.MemoryLayer.close">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/memory_layer.html#MemoryLayer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.memory_layer.MemoryLayer.close" title="Link to this definition"></a></dt>
+<dd><p>Close the memory cache layer.</p>
+<p>For memory cache, this is a no-op as there are no connections to close.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.cache_layers.redis_layer">
+<span id="redis-layer"></span><h2>Redis Layer<a class="headerlink" href="#module-src.cache_layers.redis_layer" title="Link to this heading"></a></h2>
+<p>Redis cache layer implementation.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.cache_layers.redis_layer.RedisLayer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.cache_layers.redis_layer.</span></span><span class="sig-name descname"><span class="pre">RedisLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_min_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.redis_layer.RedisLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#src.cache_layers.base_layer.BaseCacheLayer" title="src.cache_layers.base_layer.BaseCacheLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCacheLayer</span></code></a></p>
+<p>Redis cache layer implementation.</p>
+<p>This layer stores cache data in a Redis server for shared access across
+multiple processes or machines.</p>
+<p>Initialize the Redis cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+<li><p><strong>redis_url</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – URL for connecting to Redis server</p></li>
+<li><p><strong>retry_attempts</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of retry attempts for Redis operations</p></li>
+<li><p><strong>retry_delay</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Delay between retries in seconds</p></li>
+<li><p><strong>enable_compression</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to enable compression</p></li>
+<li><p><strong>compression_min_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Minimum size for compression to be applied</p></li>
+<li><p><strong>compression_level</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Compression level (1-9) for zlib</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.redis_layer.RedisLayer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_min_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.redis_layer.RedisLayer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the Redis cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+<li><p><strong>redis_url</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – URL for connecting to Redis server</p></li>
+<li><p><strong>retry_attempts</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of retry attempts for Redis operations</p></li>
+<li><p><strong>retry_delay</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Delay between retries in seconds</p></li>
+<li><p><strong>enable_compression</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to enable compression</p></li>
+<li><p><strong>compression_min_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Minimum size for compression to be applied</p></li>
+<li><p><strong>compression_level</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Compression level (1-9) for zlib</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.redis_layer.RedisLayer.get">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.redis_layer.RedisLayer.get" title="Link to this definition"></a></dt>
+<dd><p>Get a value from the Redis cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(found, value) tuple</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[bool, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.redis_layer.RedisLayer.set">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.redis_layer.RedisLayer.set" title="Link to this definition"></a></dt>
+<dd><p>Set a value in the Redis cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p></li>
+<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – The value to cache</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.redis_layer.RedisLayer.delete">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.redis_layer.RedisLayer.delete" title="Link to this definition"></a></dt>
+<dd><p>Delete a value from the Redis cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if deleted successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.redis_layer.RedisLayer.get_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.get_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.redis_layer.RedisLayer.get_many" title="Link to this definition"></a></dt>
+<dd><p>Get multiple values from the Redis cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – List of cache keys</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping keys to their values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.redis_layer.RedisLayer.set_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.set_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.redis_layer.RedisLayer.set_many" title="Link to this definition"></a></dt>
+<dd><p>Set multiple values in the Redis cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Dictionary mapping keys to values</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all values were set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.redis_layer.RedisLayer.clear">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.redis_layer.RedisLayer.clear" title="Link to this definition"></a></dt>
+<dd><p>Clear all values in this Redis cache.</p>
+<p>Only clears keys with this instance’s namespace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if cleared successfully</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.redis_layer.RedisLayer.close">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/redis_layer.html#RedisLayer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.redis_layer.RedisLayer.close" title="Link to this definition"></a></dt>
+<dd><p>Close the Redis client and release resources.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.cache_layers.disk_layer">
+<span id="disk-layer"></span><h2>Disk Layer<a class="headerlink" href="#module-src.cache_layers.disk_layer" title="Link to this heading"></a></h2>
+<p>Disk-based cache layer implementation.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.cache_layers.disk_layer.DiskLayer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.cache_layers.disk_layer.</span></span><span class="sig-name descname"><span class="pre">DiskLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.disk_layer.DiskLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#src.cache_layers.base_layer.BaseCacheLayer" title="src.cache_layers.base_layer.BaseCacheLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCacheLayer</span></code></a></p>
+<p>Disk-based cache layer implementation using Python’s shelve.</p>
+<p>This layer stores cache data on disk for persistence across process restarts.</p>
+<p>Initialize the disk cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+<li><p><strong>cache_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Directory to store cache files</p></li>
+<li><p><strong>cache_file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the cache file</p></li>
+<li><p><strong>retry_attempts</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of retry attempts for disk operations</p></li>
+<li><p><strong>retry_delay</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Delay between retries in seconds</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.disk_layer.DiskLayer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.disk_layer.DiskLayer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the disk cache layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>namespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Namespace prefix for cache keys</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default time-to-live in seconds for cached values</p></li>
+<li><p><strong>cache_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Directory to store cache files</p></li>
+<li><p><strong>cache_file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the cache file</p></li>
+<li><p><strong>retry_attempts</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of retry attempts for disk operations</p></li>
+<li><p><strong>retry_delay</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Delay between retries in seconds</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.disk_layer.DiskLayer.get">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.disk_layer.DiskLayer.get" title="Link to this definition"></a></dt>
+<dd><p>Get a value from the disk cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key (already namespaced)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(found, value) tuple</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[bool, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.disk_layer.DiskLayer.set">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.disk_layer.DiskLayer.set" title="Link to this definition"></a></dt>
+<dd><p>Set a value in the disk cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key (already namespaced)</p></li>
+<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – The value to cache</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.disk_layer.DiskLayer.delete">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.disk_layer.DiskLayer.delete" title="Link to this definition"></a></dt>
+<dd><p>Delete a value from the disk cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key (already namespaced)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if deleted successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.disk_layer.DiskLayer.get_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.get_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.disk_layer.DiskLayer.get_many" title="Link to this definition"></a></dt>
+<dd><p>Get multiple values from the disk cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – List of cache keys (already namespaced)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping keys to their values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.disk_layer.DiskLayer.set_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.set_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.disk_layer.DiskLayer.set_many" title="Link to this definition"></a></dt>
+<dd><p>Set multiple values in the disk cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Dictionary mapping keys to values</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (defaults to layer ttl)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all values were set successfully</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.disk_layer.DiskLayer.clear">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.disk_layer.DiskLayer.clear" title="Link to this definition"></a></dt>
+<dd><p>Clear all values in the disk cache.</p>
+<p>Only clears keys with this instance’s namespace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if cleared successfully</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_layers.disk_layer.DiskLayer.close">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_layers/disk_layer.html#DiskLayer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_layers.disk_layer.DiskLayer.close" title="Link to this definition"></a></dt>
+<dd><p>Close the disk cache and save metadata.</p>
+<p>This should be called when the cache is no longer needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cache_config.html" class="btn btn-neutral float-left" title="Cache Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="decorators.html" class="btn btn-neutral float-right" title="Decorators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CacheManager Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

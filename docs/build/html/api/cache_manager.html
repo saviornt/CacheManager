@@ -1,0 +1,789 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cache Manager &mdash; CacheManager 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Cache Configuration" href="cache_config.html" />
+    <link rel="prev" title="API Reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CacheManager
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Cache Manager</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cachemanager-class">CacheManager Class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.cache_manager.CacheManager"><code class="docutils literal notranslate"><span class="pre">CacheManager</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core-methods">Core Methods</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#batch-operations">Batch Operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#statistics-and-monitoring">Statistics and Monitoring</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#decorators">Decorators</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cache_config.html">Cache Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache_layers.html">Cache Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decorators.html">Decorators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eviction_policies.html">Eviction Policies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/index.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CacheManager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Cache Manager</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/cache_manager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cache-manager">
+<h1>Cache Manager<a class="headerlink" href="#cache-manager" title="Link to this heading"></a></h1>
+<p>The core caching system module that provides caching operations with support for multiple backends.</p>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.cache_manager.</span></span><span class="sig-name descname"><span class="pre">CacheManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config=CacheConfig(cache_dir='.cache'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_file='cache.db'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_max_size=5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_ttl=300.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eviction_policy=&lt;EvictionPolicy.LRU:</span> <span class="pre">'lru'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace='default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_redis=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_url='redis://localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_port=6379</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_username=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_password=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_cache_ttl=60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_cache_enabled=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_layered_cache=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_layers=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_through=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_through=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_compression=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_min_size=1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_level=6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_usage_monitoring=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_usage_threshold=75.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_critical_threshold=90.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_check_interval=3600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_retention_days=30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_attempts=3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment=&lt;Environment.DEV:</span> <span class="pre">'dev'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level=&lt;LogLevel.DEBUG:</span> <span class="pre">'debug'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir='./logs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_to_file=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_max_size=10485760</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_backup_count=5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_telemetry=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">telemetry_interval=60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_collection=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_warmup=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warmup_keys_file=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warmup_on_start=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_adaptive_ttl=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_ttl_min=60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_ttl_max=86400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_count_threshold=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_ttl_adjustment_factor=1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_distributed_locking=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_timeout=30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_retry_attempts=5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_retry_interval=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_sharding=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_shards=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sharding_algorithm='consistent_hash'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_invalidation=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invalidation_channel='cache:invalidation'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_encryption=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encryption_key=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encryption_salt=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_data_signing=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signing_key=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signing_algorithm='sha256'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_access_control=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_ssl=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_ssl_cert_reqs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_ssl_ca_certs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_connection_timeout=5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_max_connections=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_redis_sentinel=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinel_master_name='mymaster'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinel_addresses=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_cache_enabled=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_cache_ttl=3600.0)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages caching operations with support for multiple backends.</p>
+<p>Features:
+- Multiple backend support (in-memory, Redis, shelve)
+- TTL (Time-To-Live) for cached items
+- Serialization via msgpack (falls back to pickle)
+- Thread-safe eviction policies (LRU, FIFO, LFU)
+- Namespacing to prevent key collisions
+- Circuit breaker pattern to handle backend failures
+- In-memory caching layer for performance
+- Layered cache approach with read-through/write-through
+- Bulk operations (get_many, set_many)
+- Function decorator for easy caching
+- Compression support for large values</p>
+<p>Initialize the cache manager with the given configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="cache_config.html#src.cache_config.CacheConfig" title="src.cache_config.CacheConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">CacheConfig</span></code></a></span>) – Cache configuration</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config=CacheConfig(cache_dir='.cache'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_file='cache.db'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_max_size=5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_ttl=300.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eviction_policy=&lt;EvictionPolicy.LRU:</span> <span class="pre">'lru'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace='default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_redis=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_url='redis://localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_port=6379</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_username=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_password=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_cache_ttl=60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_cache_enabled=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_layered_cache=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_layers=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_through=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_through=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_compression=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_min_size=1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_level=6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_usage_monitoring=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_usage_threshold=75.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_critical_threshold=90.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_check_interval=3600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_retention_days=30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_attempts=3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment=&lt;Environment.DEV:</span> <span class="pre">'dev'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level=&lt;LogLevel.DEBUG:</span> <span class="pre">'debug'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir='./logs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_to_file=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_max_size=10485760</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_backup_count=5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_telemetry=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">telemetry_interval=60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_collection=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_warmup=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warmup_keys_file=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warmup_on_start=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_adaptive_ttl=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_ttl_min=60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_ttl_max=86400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_count_threshold=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_ttl_adjustment_factor=1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_distributed_locking=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_timeout=30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_retry_attempts=5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_retry_interval=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_sharding=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_shards=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sharding_algorithm='consistent_hash'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_invalidation=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invalidation_channel='cache:invalidation'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_encryption=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encryption_key=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encryption_salt=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_data_signing=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signing_key=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signing_algorithm='sha256'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_access_control=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_ssl=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_ssl_cert_reqs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_ssl_ca_certs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_connection_timeout=5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_max_connections=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_redis_sentinel=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinel_master_name='mymaster'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinel_addresses=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_cache_enabled=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_cache_ttl=3600.0)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize the cache manager with the given configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="cache_config.html#src.cache_config.CacheConfig" title="src.cache_config.CacheConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">CacheConfig</span></code></a></span>) – Cache configuration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a value from the cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The cached value or None if not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>CacheError</strong> – If there’s an error accessing the cache</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Set a value in the cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Cache key</p></li>
+<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Value to store</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Time to live in seconds (overrides the default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if set successfully, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>CacheError</strong> – If there’s an error setting the value in cache</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Delete a value from the cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key to delete</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the key was deleted, False if it did not exist</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>CacheConnectionError</strong> – If there’s an error connecting to the cache backend</p></li>
+<li><p><strong>CacheKeyError</strong> – If the key is invalid</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Clear all cache entries from all active layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.get_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get cache statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary with cache statistics</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">cached</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.cached"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Decorator to cache function results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (overrides the default)</p></li>
+<li><p><strong>key_func</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Optional function to generate custom cache keys</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code>(<code class="docutils literal notranslate"><span class="pre">F</span></code>, bound= <code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>])], <code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code>(<code class="docutils literal notranslate"><span class="pre">F</span></code>, bound= <code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>])]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Decorator function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">invalidate_cached</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.invalidate_cached"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Invalidate a cached function result for specific arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – The decorated function whose cache to invalidate</p></li>
+<li><p><strong>*args</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – The function arguments</p></li>
+<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – The function keyword arguments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if invalidation was successful, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AttributeError</strong> – If the function is not decorated with &#64;cached</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.get_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get multiple values from the cache at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – List of cache keys to retrieve</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping keys to their values (only existing keys)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>CacheConnectionError</strong> – If there’s an error connecting to the cache backend</p></li>
+<li><p><strong>CacheSerializationError</strong> – If there’s an error deserializing the data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expiration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.set_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Set multiple values in the cache at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Dictionary mapping keys to values</p></li>
+<li><p><strong>expiration</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Optional expiration time in seconds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>CacheConnectionError</strong> – If there’s an error connecting to the cache backend</p></li>
+<li><p><strong>CacheSerializationError</strong> – If there’s an error serializing the data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Close the cache manager and release all resources.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="cachemanager-class">
+<h2>CacheManager Class<a class="headerlink" href="#cachemanager-class" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.cache_manager.</span></span><span class="sig-name descname"><span class="pre">CacheManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config=CacheConfig(cache_dir='.cache'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_file='cache.db'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_max_size=5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_ttl=300.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eviction_policy=&lt;EvictionPolicy.LRU:</span> <span class="pre">'lru'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace='default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_redis=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_url='redis://localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_port=6379</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_username=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_password=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_cache_ttl=60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_cache_enabled=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_layered_cache=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_layers=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_through=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_through=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_compression=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_min_size=1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_level=6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_usage_monitoring=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_usage_threshold=75.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_critical_threshold=90.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_check_interval=3600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_retention_days=30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_attempts=3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment=&lt;Environment.DEV:</span> <span class="pre">'dev'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level=&lt;LogLevel.DEBUG:</span> <span class="pre">'debug'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir='./logs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_to_file=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_max_size=10485760</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_backup_count=5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_telemetry=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">telemetry_interval=60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_collection=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_warmup=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warmup_keys_file=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warmup_on_start=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_adaptive_ttl=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_ttl_min=60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_ttl_max=86400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_count_threshold=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_ttl_adjustment_factor=1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_distributed_locking=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_timeout=30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_retry_attempts=5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_retry_interval=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_sharding=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_shards=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sharding_algorithm='consistent_hash'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_invalidation=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invalidation_channel='cache:invalidation'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_encryption=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encryption_key=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encryption_salt=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_data_signing=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signing_key=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signing_algorithm='sha256'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_access_control=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_ssl=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_ssl_cert_reqs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_ssl_ca_certs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_connection_timeout=5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_max_connections=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_redis_sentinel=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinel_master_name='mymaster'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinel_addresses=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_cache_enabled=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_cache_ttl=3600.0)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager" title="Link to this definition"></a></dt>
+<dd><p>Manages caching operations with support for multiple backends.</p>
+<p>Features:
+- Multiple backend support (in-memory, Redis, shelve)
+- TTL (Time-To-Live) for cached items
+- Serialization via msgpack (falls back to pickle)
+- Thread-safe eviction policies (LRU, FIFO, LFU)
+- Namespacing to prevent key collisions
+- Circuit breaker pattern to handle backend failures
+- In-memory caching layer for performance
+- Layered cache approach with read-through/write-through
+- Bulk operations (get_many, set_many)
+- Function decorator for easy caching
+- Compression support for large values</p>
+<p>Initialize the cache manager with the given configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="cache_config.html#src.cache_config.CacheConfig" title="src.cache_config.CacheConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">CacheConfig</span></code></a></span>) – Cache configuration</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config=CacheConfig(cache_dir='.cache'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_file='cache.db'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_max_size=5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_ttl=300.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eviction_policy=&lt;EvictionPolicy.LRU:</span> <span class="pre">'lru'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace='default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_redis=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_url='redis://localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_port=6379</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_username=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_password=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_cache_ttl=60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_cache_enabled=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_layered_cache=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_layers=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_through=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_through=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_compression=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_min_size=1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_level=6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_usage_monitoring=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_usage_threshold=75.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_critical_threshold=90.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_check_interval=3600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_retention_days=30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_attempts=3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment=&lt;Environment.DEV:</span> <span class="pre">'dev'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level=&lt;LogLevel.DEBUG:</span> <span class="pre">'debug'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir='./logs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_to_file=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_max_size=10485760</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_backup_count=5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_telemetry=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">telemetry_interval=60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_collection=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_warmup=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warmup_keys_file=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warmup_on_start=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_adaptive_ttl=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_ttl_min=60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_ttl_max=86400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_count_threshold=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_ttl_adjustment_factor=1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_distributed_locking=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_timeout=30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_retry_attempts=5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_retry_interval=0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_sharding=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_shards=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sharding_algorithm='consistent_hash'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_invalidation=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invalidation_channel='cache:invalidation'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_encryption=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encryption_key=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encryption_salt=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_data_signing=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signing_key=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signing_algorithm='sha256'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_access_control=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_ssl=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_ssl_cert_reqs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_ssl_ca_certs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_connection_timeout=5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redis_max_connections=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_redis_sentinel=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinel_master_name='mymaster'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinel_addresses=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_cache_enabled=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_cache_ttl=3600.0)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the cache manager with the given configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="cache_config.html#src.cache_config.CacheConfig" title="src.cache_config.CacheConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">CacheConfig</span></code></a></span>) – Cache configuration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager.get">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager.get" title="Link to this definition"></a></dt>
+<dd><p>Get a value from the cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The cached value or None if not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>CacheError</strong> – If there’s an error accessing the cache</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager.set">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager.set" title="Link to this definition"></a></dt>
+<dd><p>Set a value in the cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Cache key</p></li>
+<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Value to store</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Time to live in seconds (overrides the default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if set successfully, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>CacheError</strong> – If there’s an error setting the value in cache</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager.delete">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager.delete" title="Link to this definition"></a></dt>
+<dd><p>Delete a value from the cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key to delete</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the key was deleted, False if it did not exist</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>CacheConnectionError</strong> – If there’s an error connecting to the cache backend</p></li>
+<li><p><strong>CacheKeyError</strong> – If the key is invalid</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager.clear">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager.clear" title="Link to this definition"></a></dt>
+<dd><p>Clear all cache entries from all active layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager.get_stats">
+<span class="sig-name descname"><span class="pre">get_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.get_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager.get_stats" title="Link to this definition"></a></dt>
+<dd><p>Get cache statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary with cache statistics</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager.cached">
+<span class="sig-name descname"><span class="pre">cached</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.cached"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager.cached" title="Link to this definition"></a></dt>
+<dd><p>Decorator to cache function results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Time to live in seconds (overrides the default)</p></li>
+<li><p><strong>key_func</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Optional function to generate custom cache keys</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code>(<code class="docutils literal notranslate"><span class="pre">F</span></code>, bound= <code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>])], <code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code>(<code class="docutils literal notranslate"><span class="pre">F</span></code>, bound= <code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>])]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Decorator function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager.invalidate_cached">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">invalidate_cached</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.invalidate_cached"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager.invalidate_cached" title="Link to this definition"></a></dt>
+<dd><p>Invalidate a cached function result for specific arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – The decorated function whose cache to invalidate</p></li>
+<li><p><strong>*args</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – The function arguments</p></li>
+<li><p><strong>**kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – The function keyword arguments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if invalidation was successful, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AttributeError</strong> – If the function is not decorated with &#64;cached</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager.get_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.get_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager.get_many" title="Link to this definition"></a></dt>
+<dd><p>Get multiple values from the cache at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – List of cache keys to retrieve</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping keys to their values (only existing keys)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>CacheConnectionError</strong> – If there’s an error connecting to the cache backend</p></li>
+<li><p><strong>CacheSerializationError</strong> – If there’s an error deserializing the data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager.set_many">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expiration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.set_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager.set_many" title="Link to this definition"></a></dt>
+<dd><p>Set multiple values in the cache at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Dictionary mapping keys to values</p></li>
+<li><p><strong>expiration</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Optional expiration time in seconds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>CacheConnectionError</strong> – If there’s an error connecting to the cache backend</p></li>
+<li><p><strong>CacheSerializationError</strong> – If there’s an error serializing the data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager.__aenter__">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__aenter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.__aenter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager.__aenter__" title="Link to this definition"></a></dt>
+<dd><p>Enter async context manager.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns self for context manager</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.cache_manager.CacheManager" title="src.cache_manager.CacheManager">CacheManager</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager.__aexit__">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__aexit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.__aexit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager.__aexit__" title="Link to this definition"></a></dt>
+<dd><p>Exit async context manager and clean up resources.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>exc_type</strong> (<em>type</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>exc</strong> (<em>Exception</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>tb</strong> (<em>Any</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.cache_manager.CacheManager.close">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.cache_manager.CacheManager.close" title="Link to this definition"></a></dt>
+<dd><p>Close the cache manager and release all resources.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="core-methods">
+<h3>Core Methods<a class="headerlink" href="#core-methods" title="Link to this heading"></a></h3>
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CacheManager.</span></span><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd><p>Get a value from the cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The cached value or None if not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>CacheError</strong> – If there’s an error accessing the cache</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CacheManager.</span></span><span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd><p>Set a value in the cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Cache key</p></li>
+<li><p><strong>value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – Value to store</p></li>
+<li><p><strong>ttl</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Time to live in seconds (overrides the default)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if set successfully, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>CacheError</strong> – If there’s an error setting the value in cache</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CacheManager.</span></span><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd><p>Delete a value from the cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The cache key to delete</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the key was deleted, False if it did not exist</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>CacheConnectionError</strong> – If there’s an error connecting to the cache backend</p></li>
+<li><p><strong>CacheKeyError</strong> – If the key is invalid</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CacheManager.</span></span><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dd><p>Clear all cache entries from all active layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CacheManager.</span></span><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
+<dd><p>Close the cache manager and release all resources.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="batch-operations">
+<h3>Batch Operations<a class="headerlink" href="#batch-operations" title="Link to this heading"></a></h3>
+<dl class="py method">
+<dt class="sig sig-object py" id="id5">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CacheManager.</span></span><span class="sig-name descname"><span class="pre">get_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.get_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
+<dd><p>Get multiple values from the cache at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – List of cache keys to retrieve</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping keys to their values (only existing keys)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>CacheConnectionError</strong> – If there’s an error connecting to the cache backend</p></li>
+<li><p><strong>CacheSerializationError</strong> – If there’s an error deserializing the data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CacheManager.</span></span><span class="sig-name descname"><span class="pre">set_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expiration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.set_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
+<dd><p>Set multiple values in the cache at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Dictionary mapping keys to values</p></li>
+<li><p><strong>expiration</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Optional expiration time in seconds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>CacheConnectionError</strong> – If there’s an error connecting to the cache backend</p></li>
+<li><p><strong>CacheSerializationError</strong> – If there’s an error serializing the data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="statistics-and-monitoring">
+<h3>Statistics and Monitoring<a class="headerlink" href="#statistics-and-monitoring" title="Link to this heading"></a></h3>
+<dl class="py method">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-prename descclassname"><span class="pre">CacheManager.</span></span><span class="sig-name descname"><span class="pre">get_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/cache_manager.html#CacheManager.get_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Link to this definition"></a></dt>
+<dd><p>Get cache statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary with cache statistics</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="decorators">
+<h3>Decorators<a class="headerlink" href="#decorators" title="Link to this heading"></a></h3>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cache_config.html" class="btn btn-neutral float-right" title="Cache Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CacheManager Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
