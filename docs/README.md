@@ -10,29 +10,29 @@ CacheManager is designed to provide a unified interface for multiple caching bac
 
 Browse the documentation directly from GitHub:
 
-- [Getting Started](build/html/index.html)
-- [Installation Guide](build/html/installation.html)
-- [Quick Start Tutorial](build/html/quickstart.html)
-- [Configuration Options](build/html/configuration.html)
-- [Usage Examples](build/html/examples.html)
+- [Getting Started](build/md/index.md)
+- [Installation Guide](build/md/installation.md)
+- [Quick Start Tutorial](build/md/quickstart.md)
+- [Configuration Options](build/md/configuration.md)
+- [Usage Examples](build/md/examples.md)
 
 ### API Reference
 
-- [CacheManager API](build/html/api/cache_manager.html)
-- [Cache Configuration](build/html/api/cache_config.html)
-- [Cache Layers](build/html/api/cache_layers.html)
-- [Utility Functions](build/html/api/utils.html)
-- [Eviction Policies](build/html/api/eviction_policies.html)
-- [Decorators](build/html/api/decorators.html)
+- [CacheManager API](build/md/api/cache_manager.md)
+- [Cache Configuration](build/md/api/cache_config.md)
+- [Cache Layers](build/md/api/cache_layers.md)
+- [Utility Functions](build/md/api/utils.md)
+- [Eviction Policies](build/md/api/eviction_policies.md)
+- [Decorators](build/md/api/decorators.md)
 
 ### Advanced Topics
 
-- [Hybrid Caching](build/html/advanced/hybrid_caching.html)
-- [Eviction Strategies](build/html/advanced/eviction_strategies.html)
-- [Compression](build/html/advanced/compression.html)
-- [Namespacing](build/html/advanced/namespacing.html)
-- [Telemetry](build/html/advanced/telemetry.html)
-- [Security Best Practices](build/html/advanced/security.html)
+- [Hybrid Caching](build/md/advanced/hybrid_caching.md)
+- [Eviction Strategies](build/md/advanced/eviction_strategies.md)
+- [Compression](build/md/advanced/compression.md)
+- [Namespacing](build/md/advanced/namespacing.md)
+- [Telemetry](build/md/advanced/telemetry.md)
+- [Security Best Practices](build/md/advanced/security.md)
 
 ## Documentation Formats
 
@@ -48,7 +48,7 @@ We welcome contributions to improve this documentation. If you find any issues o
 
 ## Building the Documentation Locally
 
-If you'd like to build the documentation locally, you can find instructions in the [Contributing Guide](build/html/contributing.html).
+If you'd like to build the documentation locally, you can find instructions in the [Contributing Guide](build/md/contributing.md).
 
 ## License
 
